@@ -1,0 +1,19 @@
+{
+  "name": "@internal/rag-rd-knowledge-deck",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev slides.md --port 3030",
+    "build": "slidev build slides.md --out dist",
+    "export": "slidev export slides.md --output rag-rd-knowledge-deck.pdf"
+  },
+  "dependencies": {
+    "@slidev/cli": "52.15.1",
+    "@slidev/theme-default": "0.25.0",
+    "vue": "3.5.33"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "1.2.20"
+  }
+}

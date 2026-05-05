@@ -1,0 +1,10 @@
+{
+  "name": "internal-rag-slidev-workspace",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "deck:dev": "pnpm --filter @internal/rag-rd-knowledge-deck dev",
+    "deck:build": "pnpm --filter @internal/rag-rd-knowledge-deck build",
+    "deck:export": "pnpm --filter @internal/rag-rd-knowledge-deck export"
+  }
+}
