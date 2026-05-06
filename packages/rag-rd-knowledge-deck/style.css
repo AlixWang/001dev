@@ -1,6 +1,45 @@
 :root {
+  --slidev-theme-primary: #0f818a;
+  --brand: #0f818a;
+  --brand-strong: #075d66;
+  --brand-soft: rgba(15, 129, 138, 0.12);
+  --brand-line: rgba(15, 129, 138, 0.38);
+  --deck-bg: #f6fbfc;
+  --deck-bg-2: #e9f3f5;
+  --deck-panel: rgba(255, 255, 255, 0.96);
+  --deck-panel-2: rgba(239, 248, 250, 0.96);
+  --deck-line: rgba(24, 78, 88, 0.18);
+  --deck-text: #11262d;
+  --deck-body: #28434b;
+  --deck-strong: #071116;
+  --deck-muted: #5d7279;
+  --deck-code-text: #12363f;
+  --deck-code-bg: rgba(15, 129, 138, 0.12);
+  --deck-code-line: rgba(15, 129, 138, 0.28);
+  --deck-code-block-bg: #f3fafb;
+  --deck-code-block-text: #172f37;
+  --deck-table-cell-line: rgba(24, 78, 88, 0.14);
+  --deck-table-bg: rgba(255, 255, 255, 0.9);
+  --deck-table-head-bg: rgba(15, 129, 138, 0.14);
+  --deck-shadow: rgba(16, 64, 74, 0.12);
+  --deck-grid-x: rgba(15, 129, 138, 0.08);
+  --deck-grid-y: rgba(15, 129, 138, 0.06);
+  --deck-gradient-start: #f7fcfd;
+  --deck-gradient-mid: #eef8fa;
+  --deck-gradient-end: #e7f3f5;
+  --deck-callout-bg: rgba(15, 129, 138, 0.10);
+  --deck-callout-text: #173940;
+  --deck-pill-text: #164047;
+  --deck-subtitle: #435f67;
+  --deck-footnote: rgba(40, 67, 75, 0.62);
+  --deck-amber: #d6a73f;
+  --deck-red: #d96b78;
+  --deck-green: #4fc38f;
+}
+
+html.dark {
   --slidev-theme-primary: #17a5af;
-  --brand: rgb(23, 165, 175);
+  --brand: #17a5af;
   --brand-strong: #19c3cf;
   --brand-soft: rgba(23, 165, 175, 0.14);
   --brand-line: rgba(23, 165, 175, 0.42);
@@ -10,18 +49,36 @@
   --deck-panel-2: rgba(20, 40, 48, 0.92);
   --deck-line: rgba(188, 214, 220, 0.16);
   --deck-text: #f4fbfc;
+  --deck-body: #dce9ec;
+  --deck-strong: #ffffff;
   --deck-muted: #9fb4ba;
-  --deck-amber: #d6a73f;
-  --deck-red: #d96b78;
-  --deck-green: #4fc38f;
+  --deck-code-text: #dffbfc;
+  --deck-code-bg: rgba(23, 165, 175, 0.13);
+  --deck-code-line: rgba(23, 165, 175, 0.24);
+  --deck-code-block-bg: #071014;
+  --deck-code-block-text: #e8fbfc;
+  --deck-table-cell-line: rgba(188, 214, 220, 0.15);
+  --deck-table-bg: rgba(10, 24, 30, 0.88);
+  --deck-table-head-bg: rgba(23, 165, 175, 0.22);
+  --deck-shadow: rgba(0, 0, 0, 0.28);
+  --deck-grid-x: rgba(23, 165, 175, 0.10);
+  --deck-grid-y: rgba(23, 165, 175, 0.08);
+  --deck-gradient-start: #061014;
+  --deck-gradient-mid: #081820;
+  --deck-gradient-end: #0d2026;
+  --deck-callout-bg: rgba(23, 165, 175, 0.10);
+  --deck-callout-text: #e8fbfc;
+  --deck-pill-text: #dffbfc;
+  --deck-subtitle: #bfd1d6;
+  --deck-footnote: rgba(220, 232, 242, 0.55);
 }
 
 .slidev-layout {
   position: relative;
   background:
-    linear-gradient(90deg, rgba(23, 165, 175, 0.10) 0 1px, transparent 1px 100%),
-    linear-gradient(180deg, rgba(23, 165, 175, 0.08) 0 1px, transparent 1px 100%),
-    linear-gradient(135deg, #061014 0%, #081820 48%, #0d2026 100%);
+    linear-gradient(90deg, var(--deck-grid-x) 0 1px, transparent 1px 100%),
+    linear-gradient(180deg, var(--deck-grid-y) 0 1px, transparent 1px 100%),
+    linear-gradient(135deg, var(--deck-gradient-start) 0%, var(--deck-gradient-mid) 48%, var(--deck-gradient-end) 100%);
   background-size: 42px 42px, 42px 42px, 100% 100%;
   color: var(--deck-text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -70,30 +127,41 @@
 
 .slidev-layout p,
 .slidev-layout li {
-  color: #dce9ec;
+  color: var(--deck-body);
   line-height: 1.55;
 }
 
 .slidev-layout strong {
-  color: #ffffff;
+  color: var(--deck-strong);
 }
 
 .slidev-layout code {
-  color: #dffbfc;
-  background: rgba(23, 165, 175, 0.13);
-  border: 1px solid rgba(23, 165, 175, 0.24);
+  color: var(--deck-code-text);
+  background: var(--deck-code-bg);
+  border: 1px solid var(--deck-code-line);
   border-radius: 6px;
   padding: 0.12rem 0.34rem;
 }
 
 .slidev-layout pre {
-  border: 1px solid rgba(188, 214, 220, 0.18);
+  color: var(--deck-code-block-text);
+  border: 1px solid var(--deck-line);
   border-radius: 8px;
-  background: #071014 !important;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  background: var(--deck-code-block-bg) !important;
+  box-shadow: 0 18px 50px var(--deck-shadow);
+}
+
+.slidev-layout pre code {
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
 }
 
 .slidev-layout .slidev-code {
+  color: var(--deck-code-block-text);
+  background: var(--deck-code-block-bg) !important;
   font-size: 0.72rem;
   line-height: 1.42;
   white-space: pre-wrap;
@@ -107,25 +175,25 @@
   border-collapse: collapse;
   overflow: hidden;
   border-radius: 8px;
-  background: rgba(10, 24, 30, 0.88);
+  background: var(--deck-table-bg);
 }
 
 .slidev-layout th {
-  color: #f4fbfc;
-  background: rgba(23, 165, 175, 0.22);
-  border-bottom: 1px solid rgba(23, 165, 175, 0.36);
+  color: var(--deck-text);
+  background: var(--deck-table-head-bg);
+  border-bottom: 1px solid var(--brand-line);
 }
 
 .slidev-layout td,
 .slidev-layout th {
-  border-color: rgba(188, 214, 220, 0.15);
+  border-color: var(--deck-table-cell-line);
   padding: 0.36rem 0.42rem;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
 
 .subtitle {
-  color: #bfd1d6;
+  color: var(--deck-subtitle);
   font-size: 1.22rem;
   line-height: 1.45;
   max-width: 50rem;
@@ -161,7 +229,7 @@
   width: 13rem;
   height: 5px;
   margin-top: 2.1rem;
-  background: linear-gradient(90deg, var(--brand), rgba(23, 165, 175, 0));
+  background: linear-gradient(90deg, var(--brand), transparent);
 }
 
 .hero-meta {
@@ -172,10 +240,10 @@
 }
 
 .hero-meta span {
-  border: 1px solid rgba(23, 165, 175, 0.34);
+  border: 1px solid var(--brand-line);
   border-radius: 999px;
-  color: #dffbfc;
-  background: rgba(23, 165, 175, 0.10);
+  color: var(--deck-pill-text);
+  background: var(--brand-soft);
   padding: 0.32rem 0.72rem;
   font-size: 0.86rem;
 }
@@ -205,11 +273,11 @@
 }
 
 .panel {
-  background: linear-gradient(180deg, var(--deck-panel), rgba(9, 22, 28, 0.92));
+  background: linear-gradient(180deg, var(--deck-panel), var(--deck-panel-2));
   border: 1px solid var(--deck-line);
   border-radius: 8px;
   padding: 1rem;
-  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 20px 55px var(--deck-shadow);
 }
 
 .panel h3 {
@@ -218,7 +286,7 @@
 
 .accent-panel {
   border-color: var(--brand-line);
-  background: linear-gradient(180deg, rgba(23, 165, 175, 0.14), rgba(9, 22, 28, 0.92));
+  background: linear-gradient(180deg, var(--brand-soft), var(--deck-panel-2));
 }
 
 .section-title {
@@ -257,9 +325,9 @@
 .stage-badge--blue,
 .stage-badge--amber,
 .stage-badge--green {
-  color: #dffbfc;
-  background: rgba(23, 165, 175, 0.12);
-  border-color: rgba(23, 165, 175, 0.46);
+  color: var(--deck-pill-text);
+  background: var(--brand-soft);
+  border-color: var(--brand-line);
 }
 
 .big-flow,
@@ -281,12 +349,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: linear-gradient(180deg, rgba(23, 165, 175, 0.14), rgba(11, 25, 32, 0.94));
-  border: 1px solid rgba(23, 165, 175, 0.32);
+  background: linear-gradient(180deg, var(--brand-soft), var(--deck-panel-2));
+  border: 1px solid var(--brand-line);
 }
 
 .flow-node__kicker {
-  color: #98cdd2;
+  color: var(--brand-strong);
   font-size: 0.68rem;
 }
 
@@ -301,20 +369,20 @@
 .flow-node--blue,
 .flow-node--amber,
 .flow-node--green {
-  border-color: rgba(23, 165, 175, 0.38);
+  border-color: var(--brand-line);
 }
 
 .compare-panel {
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--deck-line);
-  background: rgba(12, 27, 34, 0.92);
+  background: var(--deck-panel);
 }
 
 .compare-panel header {
   padding: 0.62rem 0.86rem;
   font-weight: 800;
-  border-bottom: 1px solid rgba(188, 214, 220, 0.14);
+  border-bottom: 1px solid var(--deck-table-cell-line);
 }
 
 .compare-panel__body {
@@ -322,30 +390,38 @@
 }
 
 .compare-panel--bad header {
-  color: #ffe3e6;
+  color: #7f1d2d;
   background: rgba(217, 107, 120, 0.14);
 }
 
 .compare-panel--good header {
+  color: #075d66;
+  background: var(--brand-soft);
+}
+
+html.dark .compare-panel--bad header {
+  color: #ffe3e6;
+}
+
+html.dark .compare-panel--good header {
   color: #e0fbf2;
-  background: rgba(23, 165, 175, 0.18);
 }
 
 .callout {
   border-left: 4px solid var(--brand);
-  background: rgba(23, 165, 175, 0.10);
+  background: var(--deck-callout-bg);
   padding: 0.85rem 1rem;
   border-radius: 0 8px 8px 0;
-  color: #e8fbfc;
+  color: var(--deck-callout-text);
 }
 
 .principle {
-  border: 1px solid rgba(23, 165, 175, 0.36);
+  border: 1px solid var(--brand-line);
   border-left: 5px solid var(--brand);
   border-radius: 8px;
-  background: rgba(23, 165, 175, 0.11);
+  background: var(--deck-callout-bg);
   padding: 0.9rem 1.05rem;
-  color: #eefcfd;
+  color: var(--deck-callout-text);
   font-size: 1.08rem;
   font-weight: 720;
 }
@@ -363,8 +439,8 @@
   flex-direction: column;
   justify-content: space-between;
   border-radius: 8px;
-  border: 1px solid rgba(23, 165, 175, 0.30);
-  background: linear-gradient(180deg, rgba(23, 165, 175, 0.16), rgba(10, 24, 30, 0.92));
+  border: 1px solid var(--brand-line);
+  background: linear-gradient(180deg, var(--brand-soft), var(--deck-panel-2));
   padding: 1rem;
 }
 
@@ -398,8 +474,8 @@
 .context-pack > div {
   min-height: 12rem;
   border-radius: 8px;
-  border: 1px solid rgba(23, 165, 175, 0.28);
-  background: linear-gradient(180deg, rgba(23, 165, 175, 0.13), rgba(10, 24, 30, 0.92));
+  border: 1px solid var(--brand-line);
+  background: linear-gradient(180deg, var(--brand-soft), var(--deck-panel-2));
   padding: 0.88rem;
 }
 
@@ -423,8 +499,8 @@
 .chain-row > div {
   min-height: 4.9rem;
   border-radius: 8px;
-  border: 1px solid rgba(23, 165, 175, 0.28);
-  background: linear-gradient(180deg, rgba(23, 165, 175, 0.13), rgba(10, 24, 30, 0.92));
+  border: 1px solid var(--brand-line);
+  background: linear-gradient(180deg, var(--brand-soft), var(--deck-panel-2));
   padding: 0.68rem 0.78rem;
 }
 
@@ -474,10 +550,10 @@
 .flow-merge {
   min-height: 4.85rem;
   border-radius: 8px;
-  border: 1px solid rgba(23, 165, 175, 0.34);
-  background: linear-gradient(180deg, rgba(23, 165, 175, 0.16), rgba(10, 24, 30, 0.94));
+  border: 1px solid var(--brand-line);
+  background: linear-gradient(180deg, var(--brand-soft), var(--deck-panel-2));
   padding: 0.66rem 0.72rem;
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 14px 36px var(--deck-shadow);
 }
 
 .flow-line--five .flow-card {
@@ -534,7 +610,7 @@
   left: 50%;
   width: 1px;
   height: 0.5rem;
-  background: rgba(23, 165, 175, 0.55);
+  background: var(--brand-line);
 }
 
 .flow-branch::after {
@@ -546,10 +622,10 @@
   display: grid;
   place-items: center;
   min-height: 3.5rem;
-  color: #e8fbfc;
+  color: var(--deck-callout-text);
   font-size: 0.84rem;
   font-weight: 820;
-  background: rgba(23, 165, 175, 0.22);
+  background: var(--brand-soft);
 }
 
 .compact-list {
@@ -566,6 +642,6 @@
   bottom: 1.2rem;
   left: 3.5rem;
   right: 3.5rem;
-  color: rgba(220, 232, 242, 0.55);
+  color: var(--deck-footnote);
   font-size: 0.72rem;
 }
