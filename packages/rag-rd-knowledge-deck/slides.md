@@ -182,21 +182,21 @@ Embedding 是把文本、代码、需求文档转换成向量，用来判断语�
 
 背景：
 当前会员权益体系中，普通会员、黄金会员、
-黑钻会员的权益规则分散在多个服务中...
+黑钻会员的权益规则分散在不同运营配置中...
 
 目标：
 支持运营后台统一配置会员权益...
 
-接口说明：
-需要新增 GetMemberBenefitConfig 接口...
+范围：
+权益页展示、运营配置、灰度策略和实时生效规则...
 ```
 
   </div>
   <div class="panel">
     <h3>问题</h3>
     <ul class="compact-list">
-      <li>接口片段缺少完整业务背景。</li>
-      <li>目标片段不知道相关接口名称。</li>
+      <li>规则片段缺少完整业务背景。</li>
+      <li>目标片段不知道配置范围和生效约束。</li>
       <li>标题和上文语义在短 chunk 中丢失。</li>
       <li>相似需求召回不稳定。</li>
     </ul>
@@ -210,13 +210,13 @@ Embedding 是把文本、代码、需求文档转换成向量，用来判断语�
 ```json
 {
   "doc_title": "会员权益升级需求",
-  "doc_summary": "支持运营后台统一配置会员权益，不同会员等级展示不同权益，并新增 GetMemberBenefitConfig 接口查询用户可见权益。",
-  "chunk_summary": "描述权益配置实时生效规则和新增查询接口。",
-  "chunk_text": "3. 支持权益变更后实时生效。接口说明...",
+  "doc_summary": "支持运营后台统一配置会员权益，不同会员等级展示不同权益，并要求权益变更后在用户侧实时生效。",
+  "chunk_summary": "描述权益配置实时生效规则、灰度范围和用户可见性要求。",
+  "chunk_text": "3. 支持权益变更后实时生效。灰度策略...",
   "metadata": {
     "doc_type": "requirement",
     "business_domain": "member",
-    "related_api": ["GetMemberBenefitConfig"]
+    "key_terms": ["会员权益", "运营配置", "实时生效"]
   }
 }
 ```
@@ -306,72 +306,11 @@ flowchart TB
 
 ---
 
-## Proto 文件：要围绕接口关系切
-
-<div class="grid-2">
-  <div>
-
-```proto
-service MemberBenefitService {
-  rpc GetMemberBenefitConfig(GetMemberBenefitConfigRequest)
-      returns (GetMemberBenefitConfigResponse);
-}
-
-message GetMemberBenefitConfigRequest {
-  int64 user_id = 1;
-  string scene = 2;
-}
-
-message GetMemberBenefitConfigResponse {
-  repeated BenefitItem benefits = 1;
-}
-```
-
-  </div>
-  <div class="panel">
-    <h3>不能拆散的关系</h3>
-    <ul class="compact-list">
-      <li>service 与 rpc。</li>
-      <li>request 与 response。</li>
-      <li>response 关联的核心 message。</li>
-      <li>注释中的业务语义。</li>
-    </ul>
-  </div>
-</div>
-
----
-
-## Proto：围绕 RPC 组织增强 Chunk
-
-```json
-{
-  "file_path": "proto/member/benefit.proto",
-  "service": "MemberBenefitService",
-  "rpc": "GetMemberBenefitConfig",
-  "request": "GetMemberBenefitConfigRequest",
-  "response": "GetMemberBenefitConfigResponse",
-  "related_messages": ["BenefitItem"],
-  "summary": "查询用户在指定场景下可见的会员权益配置。",
-  "metadata": {
-    "repo": "backend-protos",
-    "domain": "member"
-  }
-}
-```
-
-<div class="grid-3 mt-6">
-  <div class="panel">接口召回更完整。</div>
-  <div class="panel">方案设计能判断复用点。</div>
-  <div class="panel">代码生成更少漏字段。</div>
-</div>
-
----
-
 <div class="section-title">
   <div>
     <div class="eyebrow">Optimization 02</div>
     <h1>混合检索：语义召回 + 精确匹配</h1>
-    <p class="subtitle mx-auto">内部研发查询既有自然语言，也有接口名、字段名、枚举值和文件路径。</p>
+    <p class="subtitle mx-auto">有时候精确关键词匹配更符合搜索条件，例如代码枚举值、关键需求名称等。</p>
   </div>
 </div>
 
@@ -391,15 +330,15 @@ message GetMemberBenefitConfigResponse {
   <div class="panel accent-panel">
     <h3>Embedding 不稳定的场景</h3>
     <ul class="compact-list">
-      <li><code>GetMemberBenefitConfig</code></li>
-      <li><code>OrderStatusV2</code></li>
-      <li><code>benefit_type</code></li>
-      <li><code>MemberLevelBlack</code></li>
+      <li>明确搜索某个代码枚举值时，字面命中通常比语义相似更可靠。</li>
+      <li>需求标题、项目代号、实验名称需要按原词匹配。</li>
+      <li>错误码、埋点名、灰度开关等短 token 缺少足够语义。</li>
+      <li>表名、字段名和文件路径更依赖命名约定。</li>
     </ul>
   </div>
 </div>
 
-<div class="callout mt-8">精确 token 的意义不完全来自语义，而来自代码和接口命名约定。</div>
+<div class="callout mt-8">精确关键词的价值不只来自语义，也来自业务命名、代码约定和工程资产的稳定标识。</div>
 
 ---
 
@@ -514,7 +453,7 @@ flowchart LR
 <div class="section-title">
   <div>
     <div class="eyebrow">Optimization 04</div>
-    <h1>Prompt 重组：把碎片变成上下文包</h1>
+    <h1>Prompt重组：把碎片chunks变成<br/>精确上下文</h1>
     <p class="subtitle mx-auto">检索结果不能直接堆给模型，需要显式说明来源、关系、可复用点和风险。</p>
   </div>
 </div>
@@ -585,7 +524,7 @@ Chunk 5: 用户积分过期规则...
 
 ---
 
-## 端到端 Demo：会员权益实时生效
+## Demo：cursor接入mcp展示召回能力
 
 ```text
 我们要支持会员权益配置实时生效，运营在后台修改权益后，
@@ -600,24 +539,6 @@ Chunk 5: 用户积分过期规则...
   <div class="panel"><strong>涉及角色</strong><br><span class="muted">运营、用户</span></div>
   <div class="panel"><strong>相关模块</strong><br><span class="muted">后台、权益页、会员服务、配置中心</span></div>
 </div>
-
----
-
-## Demo 链路
-
-```mermaid
-flowchart LR
-  A[Query 理解] --> B[Embedding 召回]
-  B --> C[会员权益升级需求<br/>运营配置后台需求<br/>配置实时生效方案]
-  A --> D[BM25 召回]
-  D --> E[GetMemberBenefitConfig<br/>MemberBenefitService<br/>BuildMemberBenefitConfig]
-  C --> F[Rerank]
-  E --> F
-  F --> G[Context 重组]
-  G --> H[方案输出]
-```
-
-<div class="callout mt-8">模型最终输出需求理解、历史类似需求、可复用接口、系统改造点、缓存实时生效方案、风险和代码建议。</div>
 
 ---
 
@@ -654,17 +575,17 @@ flowchart LR
 
 <div class="grid-3">
   <div class="panel">
-    <h3>调用链增强</h3>
-    <p>补齐 RPC 到 handler、service、DAO 的路径，让代码上下文从“函数级”走向“链路级”。</p>
+    <h3>VL 多模态 Embedding</h3>
+    <p>支持图片、截图、流程图和设计稿等视觉资料入库，让需求和方案里的非文本信息也能被召回。</p>
   </div>
   <div class="panel">
-    <h3>关系型重组</h3>
-    <p>把历史需求、Proto、代码、配置和风险按当前需求重新组织，而不是按 chunk 顺序堆叠。</p>
+    <h3>Rerank 增强</h3>
+    <p>补齐更稳定的二阶段排序，让历史需求、代码片段和精确关键词结果按当前问题的重要性重排。</p>
   </div>
   <div class="panel">
-    <h3>评估体系</h3>
-    <p>沉淀 benchmark case，评估历史需求命中、Proto 命中、代码命中和方案引用准确率。</p>
+    <h3>Resummary 增强</h3>
+    <p>对召回结果做面向当前问题的再摘要，压缩噪音，补充来源、关系、缺口和可复用点。</p>
   </div>
 </div>
 
-<div class="principle mt-8">最终目标：让模型生成的不是“看起来合理”的方案，而是基于真实内部上下文的研发建议。</div>
+<div class="principle mt-8">后续重点：补齐多模态资料、排序稳定性和上下文再组织能力，让召回结果更完整、更可用。</div>
