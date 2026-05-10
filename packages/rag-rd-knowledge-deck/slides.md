@@ -38,7 +38,7 @@ RAG，全称 **Retrieval-Augmented Generation**，也就是 **检索增强生成
 
 ```mermaid
 flowchart LR
-  Q[用户问题] --> R[历史需求 / Proto / 代码 / 方案设计]
+  Q[新需求] --> R[历史需求 / Proto / 代码 / 方案设计]
   R --> C[结构化上下文包]
   C --> L[大模型]
   L --> O[更准确的研发建议]
@@ -80,33 +80,6 @@ Embedding 是把文本、代码、需求文档转换成向量，用来判断语�
 
 ---
 
-## 今天主要讲 4 个优化点
-
-<div class="optimization-map">
-  <div>
-    <span>01</span>
-    <strong>Chunk 切分</strong>
-    <p>不同资料用不同语义边界，保证召回片段完整。</p>
-  </div>
-  <div>
-    <span>02</span>
-    <strong>混合检索</strong>
-    <p>Embedding 负责语义，BM25 负责精确 token。</p>
-  </div>
-  <div>
-    <span>03</span>
-    <strong>Rerank 重排</strong>
-    <p>从粗召回结果中把真正重要的内容排到前面。</p>
-  </div>
-  <div>
-    <span>04</span>
-    <strong>Prompt 重组</strong>
-    <p>把零散 chunk 整理成模型能正确使用的上下文。</p>
-  </div>
-</div>
-
----
-
 ## 调用链路纵览
 
 <div class="rag-flowchart">
@@ -134,6 +107,33 @@ Embedding 是把文本、代码、需求文档转换成向量，用来判断语�
     <div class="flow-card"><span>08</span><strong>Prompt 重组</strong><small>按关系组织上下文</small></div>
     <div class="flow-arrow">→</div>
     <div class="flow-card"><span>09</span><strong>研发输出</strong><small>需求理解 / BC / 方案 / 代码</small></div>
+  </div>
+</div>
+
+---
+
+## 今天主要讲 4 个优化点
+
+<div class="optimization-map">
+  <div>
+    <span>01</span>
+    <strong>Chunk 切分</strong>
+    <p>不同资料用不同语义边界，保证召回片段完整。</p>
+  </div>
+  <div>
+    <span>02</span>
+    <strong>混合检索</strong>
+    <p>Embedding 负责语义，BM25 负责精确 token。</p>
+  </div>
+  <div>
+    <span>03</span>
+    <strong>Rerank 重排</strong>
+    <p>从粗召回结果中把真正重要的内容排到前面。</p>
+  </div>
+  <div>
+    <span>04</span>
+    <strong>Prompt 重组</strong>
+    <p>把零散 chunk 整理成模型能正确使用的上下文。</p>
   </div>
 </div>
 
@@ -267,19 +267,18 @@ func BuildMemberBenefitConfig(userId int64, level MemberLevel) *BenefitConfig {
 
 ```mermaid
 flowchart TB
-  File[benefit_config.go] --> P[package]
-  File --> I[imports]
-  File --> C[const / enum]
-  File --> S[struct / interface]
-  File --> F1[function A]
-  File --> F2[function B]
-  File --> M[method C]
+  File[OrderDetail.tsx] --> I[imports]
+  File --> C[React component]
+  File --> H[hooks]
+  File --> T[types]
+  File --> A[event handlers]
+  File --> V[view fragments]
 ```
 
 <div class="grid-3 mt-8">
-  <div class="panel"><strong>语法边界</strong><br><span class="muted">函数、方法、类型、接口、枚举。</span></div>
-  <div class="panel"><strong>符号信息</strong><br><span class="muted">文件路径、函数名、签名、起止行。</span></div>
-  <div class="panel"><strong>业务摘要</strong><br><span class="muted">把代码职责转换成可检索语义。</span></div>
+  <div class="panel"><strong>语法边界</strong><br><span class="muted">组件、Hook、类型、事件处理函数。</span></div>
+  <div class="panel"><strong>符号信息</strong><br><span class="muted">文件路径、组件名、props、起止行。</span></div>
+  <div class="panel"><strong>业务摘要</strong><br><span class="muted">把页面职责转换成可检索语义。</span></div>
 </div>
 
 ---
@@ -288,18 +287,18 @@ flowchart TB
 
 ```json
 {
-  "file_path": "service/member/benefit_config.go",
-  "language": "go",
-  "symbol_type": "function",
-  "symbol_name": "BuildMemberBenefitConfig",
-  "function_signature": "func BuildMemberBenefitConfig(userId int64, level MemberLevel) *BenefitConfig",
-  "summary": "根据用户会员等级构建权益配置，黄金会员开启优惠券权益，黑钻会员额外开启专属客服权益。",
-  "chunk_text": "func BuildMemberBenefitConfig(...) {...}",
+  "file_path": "src/pages/order/OrderDetail.tsx",
+  "language": "tsx",
+  "symbol_type": "react_component",
+  "symbol_name": "OrderDetailPage",
+  "component_signature": "function OrderDetailPage({ orderId }: OrderDetailPageProps)",
+  "summary": "订单详情页负责拉取订单信息，展示订单状态、付款信息、司机乘客信息等。",
+  "chunk_text": "function OrderDetailPage(...) { return <OrderDetailView ... /> }",
   "metadata": {
-    "repo": "backend-service",
-    "module": "member",
-    "start_line": 21,
-    "end_line": 42
+    "repo": "cms-web",
+    "module": "order",
+    "start_line": 18,
+    "end_line": 126
   }
 }
 ```
@@ -316,11 +315,11 @@ flowchart TB
 
 ---
 
-## 只用 Embedding 的不足
+## 只用语义相关性的不足
 
 <div class="grid-2">
   <div class="panel">
-    <h3>Embedding 擅长</h3>
+    <h3>语义相关性擅长</h3>
     <ul class="compact-list">
       <li>历史需求相似性。</li>
       <li>自然语言意图理解。</li>
@@ -328,7 +327,7 @@ flowchart TB
     </ul>
   </div>
   <div class="panel accent-panel">
-    <h3>Embedding 不稳定的场景</h3>
+    <h3>只看语义相关性不稳定的场景</h3>
     <ul class="compact-list">
       <li>明确搜索某个代码枚举值时，字面命中通常比语义相似更可靠。</li>
       <li>需求标题、项目代号、实验名称需要按原词匹配。</li>
@@ -394,8 +393,8 @@ flowchart LR
 <div class="section-title">
   <div>
     <div class="eyebrow">Optimization 03</div>
-    <h1>Rerank：从粗召回到可用证据</h1>
-    <p class="subtitle mx-auto">粗召回解决“可能相关”，Rerank 解决“谁最应该进 prompt”。</p>
+    <h1>Rerank：对原始召回结果<br/>进行重排序</h1>
+    <p class="subtitle mx-auto">向量检索找到的结果，未必真的是最适合回答用户问题的结果，所以需要更强的模型来判断哪个结果最真正回答用户问题。</p>
   </div>
 </div>
 
@@ -520,24 +519,6 @@ Chunk 5: 用户积分过期规则...
   <div><span>03</span><strong>可复用 Proto</strong><p>service、rpc、request、response、字段。</p></div>
   <div><span>04</span><strong>可复用代码</strong><p>文件、函数、职责、调用点、风险。</p></div>
   <div><span>05</span><strong>风险和缺口</strong><p>实时性、缓存、兼容性、灰度和待确认问题。</p></div>
-</div>
-
----
-
-## Demo：cursor接入mcp展示召回能力
-
-```text
-我们要支持会员权益配置实时生效，运营在后台修改权益后，
-用户进入权益页能立即看到最新权益。
-
-请帮我分析历史类似需求、可复用接口，并生成方案设计。
-```
-
-<div class="grid-4 mt-8">
-  <div class="panel"><strong>业务域</strong><br><span class="muted">会员权益</span></div>
-  <div class="panel"><strong>核心动作</strong><br><span class="muted">配置实时生效</span></div>
-  <div class="panel"><strong>涉及角色</strong><br><span class="muted">运营、用户</span></div>
-  <div class="panel"><strong>相关模块</strong><br><span class="muted">后台、权益页、会员服务、配置中心</span></div>
 </div>
 
 ---
